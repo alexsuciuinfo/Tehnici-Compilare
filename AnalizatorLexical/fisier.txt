@@ -1,0 +1,56 @@
+#include<iostream>
+#include<fstream>
+using namespace std;
+int m,n,a,b,i,j,st,dr,x,tip;
+int arb[1000000],suma;
+
+void act(int r,int st,int dr,int x,int poz)
+{
+    if(st==dr)
+    {
+        arb[r]=arb[r]+x;
+        return;
+    }
+   int mij=(st+dr)/2;
+     if(poz<=mij) act(r*2,st,mij,x,poz);
+    else act(r*2+1,mij+1,dr,x,poz);
+    arb[r]=arb[r*2]+arb[r*2+1];
+}
+ 
+void inter(int r,int st,int dr,int a,int b)
+{
+     if (a<=st && dr<=b)
+     {
+           suma=suma+arb[r];
+          return;
+     }
+    int mij=(st+dr)/2;
+     if (a<=mij) inter(2*r,st,mij,a,b);
+     if (mij<b) inter(2*r+1,mij+1,dr,a,b);
+}
+ 
+int main()
+{
+    ifstream f("datorii.in");
+    ofstream g("datorii.out");
+    f>>n>>m;
+    for(i=1;i<=n;i++)
+    {
+        f>>x;
+        act(1,1,n,x,i);
+    }
+    for(i=1;i<=m;i++)
+    {
+        f>>tip>>a>>b;
+        if (tip==1)
+        {
+             suma=0;
+             inter(1,1,n,a,b);
+            g<<suma<<'\n';
+        }
+        else
+        {
+            act(1,1,n,-b,a);
+        }
+    }
+} 
